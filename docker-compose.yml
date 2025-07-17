@@ -1,35 +1,33 @@
 services:
-#  flask-app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    container_name: flask_shop_app_container
-#    env_file:
-#      - .env.docker-compose
-#    environment:
-#      - DB_HOST=postgres
-#      - DB_PORT=5432
-#      - DB_NAME=${DB__NAME}
-#      - DB_USER=${DB__USER}
-#      - DB_PASSWORD=${DB__PASSWORD}
-#      - PORT=5555
-#      - DEBUG=False
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#    ports:
-#      - "5555:5555"
-#    restart: "unless-stopped"
-#    volumes:
-#      - ./logs:/app/logs
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "10m"
-#        max-file: "5"
-#        compress: "true"
-#    networks:
-#      - app_network
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask_shop_app_container
+    env_file:
+      - .env.docker-compose
+    environment:
+      - DB_HOST=${DB__HOST}
+      - DB_PORT=${DB__PORT}
+      - DB_NAME=${DB__NAME}
+      - DB_USER=${DB__USER}
+      - DB_PASSWORD=${DB__PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${PORT}:5555"
+    restart: "unless-stopped"
+    volumes:
+      - ./logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - app_network
 
   postgres:
     image: postgres:17

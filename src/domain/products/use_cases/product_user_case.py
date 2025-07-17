@@ -6,7 +6,7 @@ from src.infrastructure.database.repositories.category_repository import Categor
 
 
 class ProductServiceImpl:
-    def __init__(self, 
+    def __init__(self,
                  product_repo: ProductRepositoryImpl,
                  category_repo: CategoryRepositoryImpl,
                  ):
@@ -16,8 +16,3 @@ class ProductServiceImpl:
     def get_all_products(self) -> List[ProductSchemaBase]:
         """Получить все продукты"""
         return self.product_repo.get_all()
-
-
-
-
-
