@@ -4,7 +4,7 @@ from flask import Flask
 from src.presentation.views import index_app
 from src.presentation.api.api_v1 import product_api
 from src.presentation.dependencies.product_di.product import get_background_loader_service
-from src.infrastructure.database.init_db import init_database, check_database_connection, initialize_and_load_data
+from src.infrastructure.database.init_db import init_database, check_database_connection
 from src.settings import config_logging, settings
 
 
@@ -14,37 +14,28 @@ def create_app():
     try:
         if check_database_connection():
             init_database()
-            logging.info("База данных успешно инициализирована")
+            logging.info("База данных запущена")
         else:
             logging.error("Не удалось подключиться к базе данных")
     except Exception as e:
-        logging.error(f"Ошибка при инициализации базы данных: {e}")
+        logging.error(f"Ошибка при запуске базы данных: {e}")
     
-    app = Flask(__name__, 
-                static_folder='static',
-                static_url_path='/static')
+    app = Flask(__name__)
     
     app.register_blueprint(index_app)
     app.register_blueprint(product_api)
-    
     try:
         background_loader = get_background_loader_service()
         background_loader.start()
-        initialize_and_load_data()
-        logging.info("Фоновая загрузка данных запущена при старте приложения")
     except Exception as e:
         logging.error(f"Ошибка при запуске фоновой загрузки: {e}")
-    
     return app
 
 
 def main():
     app = create_app()
-    
     port = settings.port
     debug = settings.debug
-    
-    logging.info(f"Запуск приложения на порту {port}")
     app.run(host=settings.host, port=port, debug=debug)
 
 
