@@ -26,7 +26,7 @@ class Base(DeclarativeBase):
     pass
 
 
-def get_session() -> Generator[Session, None]:
+def get_session() -> Generator[Session, None, None]:
     with SessionFactory() as session:
         try:
             yield session
