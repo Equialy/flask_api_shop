@@ -18,7 +18,7 @@ class ProductParameter(Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
 
 
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id", ondelete="CASCADE"), nullable=True)
 
     product: Mapped["Product"] = relationship('Product', back_populates='parameters')
 

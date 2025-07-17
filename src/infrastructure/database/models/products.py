@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, DateTime, ForeignKey, Numeric, CheckConstraint, Boolean, Integer, Text
+from sqlalchemy import String, DateTime, ForeignKey,  Boolean, Integer, Text
 from src.infrastructure.database.engine import Base
 
 
@@ -12,16 +12,8 @@ class Product(Base):
     name: Mapped[str] = mapped_column(String, nullable=True)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime,default=datetime.now, onupdate=datetime.now, nullable=True)
     category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), nullable=True)
-    # colors_id: Mapped[int | None] = mapped_column(ForeignKey("product_colors.id"), nullable=True)
-    # excluded: Mapped[int | None] = mapped_column()
-    # extras: Mapped[int | None] = mapped_column()
-    # image_id: Mapped[int | None] = mapped_column(ForeignKey("product_images.id"), nullable=True)
     importance_num: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    # marks: Mapped[int | None] = mapped_column()
     moysklad_connector_products_data: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    # parameters_id: Mapped[int | None] = mapped_column(ForeignKey("product_parameters.id"), nullable=True)
-    # reviews: Mapped[int | None ] = mapped_column()
-    # reviews_video: Mapped[int | None] = mapped_column(ForeignKey("product_video.id"), nullable=True)
     tags: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, DateTime, ForeignKey, Numeric, CheckConstraint, Boolean, Integer, Text
+from sqlalchemy import String,  ForeignKey, Integer
 from src.infrastructure.database.engine import Base
 
 
