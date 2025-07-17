@@ -10,20 +10,6 @@ class CategoryRepositoryImpl:
         self.session = session
         self.model = Category
 
-    def add(self, category: Category) -> Category:
-        """Добавить категорию в базу данных"""
-        self.session.add(category)
-        self.session.commit()
-        return category
-
-    def get_by_id(self, category_id: int) -> Optional[Category]:
-        """Получить категорию по ID"""
-        return self.session.query(Category).filter(Category.id == category_id).first()
-
-
-    def count(self) -> int:
-        """Получить количество категорий"""
-        return self.session.query(Category).count()
 
     def bulk_add(self, categories: List[Category]) -> List[Category]:
         """Добавить несколько категорий"""
@@ -37,3 +23,6 @@ class CategoryRepositoryImpl:
         self.session.query(Category).delete()
         self.session.commit()
         return count 
+
+    def get_all(self) -> List[Category]:
+        return self.session.query(self.model).all() 
