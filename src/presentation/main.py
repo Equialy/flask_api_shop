@@ -36,7 +36,7 @@ def main():
     app = create_app()
     port = settings.port
     debug = settings.debug
-    app.run(host=settings.host, port=port, debug=debug)
+    app.run(host=settings.host, port=port, debug=debug,  threaded=True)
 
 
 if __name__ == "__main__":
