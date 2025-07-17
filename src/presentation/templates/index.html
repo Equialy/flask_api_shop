@@ -7,6 +7,84 @@
 
 </head>
 <body>
+<h1>Статистика</h1>
+<ul>
+    <li>Всего товаров: {{ products|length }}</li>
+    <li>Всего категорий: {{ categories|length }}</li>
+    <li>Всего параметров: {{ parameters|length }}</li>
+    <li>Всего изображений: {{ images|length }}</li>
+</ul>
 
+<h2>Категории</h2>
+<ul>
+    {% for c in categories %}
+    <li>{{ c.id }}: {{ c.name }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Товары</h2>
+<ul>
+    {% for p in products %}
+    <li>
+        <h3>{{ p.id }}: {{ p.name }} |
+        {% if p.category %}{{ p.category.name }}{% else %}—{% endif %} |
+        on_main: {{ p.on_main }} |
+        параметры:</h3>
+        {% if p.parameters %}
+        <ul>
+            {% for param in p.parameters %}
+            <h3>Параметры {{ param.parameter_string or "—" }}</h3>
+            <li>Название: {{ param.name or "—" }}</li>
+            <li> ID: {{ param.id or "—" }}</li>
+            <li> Параметр: {{ param.parameter_string }}</li>
+            <li> Disabled {{ param.disabled }}</li>
+            <li> Дополнительный цвет {{ param.extra_field_color }}</li>
+            <li> Дополнительное изображение: {{ param.extra_field_image }}</li>
+            <li> Цена: {{ param.price }}</li>
+            <li> Старая цена: {{ param.old_price }}</li>
+            <li> Параметр сортировки {{ param.sort_order }}</li>
+            <hr>
+
+            {% endfor %}
+
+        </ul>
+        {% else %}
+        нет
+        {% endif %}
+        {% if p.images %}
+        <ul>
+            {% for image in p.images %}
+            <h3>Изображения</h3>
+            <li> URL изображения {{  image.image_url or "—" }}</li>
+            <li> Главное изображение {{ image.main_image or "—" }}</li>
+            <li> Product_id {{ image.product_id or "—" }}</li>
+            <li> Позиция товара {{ image.position or "—" }}</li>
+            <li>  Название изображения{{ image.title or "—" }}</li>
+            <li> Параметр сортировки изображения {{ image.sort_order or "—" }}</li>
+            {% endfor %}
+
+        </ul>
+        {% endif %}
+    </li>
+    <hr>
+    {% endfor %}
+</ul>
+
+<h2>Параметры</h2>
+<ul>
+    {% for param in parameters %}
+    <li>{{ param.id }}: {{ param.name or "-" }} — Цена: {{ param.price }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Изображения</h2>
+<ul>
+    {% for img in images %}
+    <li>
+        {{ img.id }}: <a href="{{ img.image_url }}">{{ img.image_url }}</a>
+        {% if img.main_image %}{% endif %}
+    </li>
+    {% endfor %}
+</ul>
 </body>
 </html>

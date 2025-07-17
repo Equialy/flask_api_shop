@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 
 from src.domain.products.schemas import ProductSchemaBase
@@ -19,7 +19,14 @@ class ProductRepositoryImpl:
         return [ProductSchemaBase.model_validate(product) for product in profucts]
 
     def get_all_orm(self) -> List[Product]:
-        return self.session.query(self.model).all()
+        return (self.session.query(self.model).options(
+            joinedload(Product.category),
+            joinedload(Product.parameters),
+            joinedload(Product.images),
+            joinedload(Product.colors),
+            joinedload(Product.product_review_video),
+            joinedload(Product.reviews),
+        ).all())
 
     def clear_all(self) -> int:
         """Очистить все продукты"""
