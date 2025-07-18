@@ -31,7 +31,7 @@ class ProductRepositoryImpl:
     def clear_all(self) -> int:
         """Очистить все продукты"""
         count = self.session.query(self.model).count()
-        self.session.query(Product).delete()
+        self.session.query(self.model).delete()
         return count
 
     def bulk_add(self, products: List[Product]) -> List[Product]:

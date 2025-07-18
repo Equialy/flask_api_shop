@@ -27,13 +27,13 @@ class BackgroundDataLoader:
         self.thread = threading.Thread(target=self._run_loop, daemon=True)
         self.thread.start()
         self.is_running = True
-        logger.info(f"Фоновая загрузка данных запущена с интервалом {self.interval_minutes} минут")
+        logger.info(f"Фоновая загрузка запущена с интервалом {self.interval_minutes} минут")
 
     def _run_loop(self):
         """Основной цикл фоновой загрузки"""
         while not self.stop_event.is_set():
             try:
-                logger.info("Начинаем фоновую загрузку данных из API")
+                logger.info("Начало фоновой зыгрузки данных из API")
                 start_time = datetime.now()
                 result = self.api_loader.load_all_data()
                 self.last_run = datetime.now()

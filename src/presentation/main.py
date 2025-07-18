@@ -29,15 +29,11 @@ def create_app():
         background_loader.start()
     except Exception as e:
         logging.error(f"Ошибка при запуске фоновой загрузки: {e}")
-    return app
-
-
-def main():
-    app = create_app()
     port = settings.port
-    debug = settings.debug
-    app.run(host=settings.host, port=port, debug=debug,  threaded=True)
+    app.run(host=settings.host, port=port, threaded=True)
+
+
 
 
 if __name__ == "__main__":
-    main()
+    create_app()

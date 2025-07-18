@@ -1,8 +1,9 @@
+
 import requests
 import logging
 from typing import Any
 from datetime import datetime
-
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from src.infrastructure.database.models import Category, Product, ProductParameter, ProductImage
 from src.infrastructure.database.repositories.product_repository import ProductRepositoryImpl
 from src.infrastructure.database.repositories.category_repository import CategoryRepositoryImpl
@@ -46,18 +47,19 @@ class ApiDataLoaderService:
             logger.error(f"Ошибка при загрузке данных из API: {e}")
             raise
         except Exception as e:
-            logger.error(f"Неожиданная ошибка при загрузке данных: {e}")
+            logger.error(f"Ошибка при загрузке данных: {e}")
             raise
 
     def load_all_data(self) -> dict[str, int]:
         """Загружаются все данные из API on_main=true и on_main=false"""
         try:
-            main_data = self.fetch_api_data(on_main=True)
-            other_data = self.fetch_api_data(on_main=False)
-            combined_data = self._combine_api_data(main_data, other_data)
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                main_data = executor.submit(self.fetch_api_data,on_main=True )
+                other_data = executor.submit(self.fetch_api_data, on_main=False)
+            combined_data = self._combine_api_data(main_data.result(), other_data.result())
             return self._save_to_database(combined_data)
         except Exception as e:
-            logger.error(f"Ошибка при загрузке всех данных: {e}")
+            logger.error(f"Ошибка при загрузке данных: {e}")
             raise
 
     def _combine_api_data(self, main_data: dict[str, Any], other_data: dict[str, Any]) -> dict[str, Any]:
@@ -93,7 +95,7 @@ class ApiDataLoaderService:
             self.parameter_repo.bulk_add(parameters)
             self.image_repo.bulk_add(images)
             logger.info(
-                f"Данные успешно сохранены в БД: {len(categories)} категорий, {len(products)} продуктов, {len(parameters)} параметров, {len(images)} изображений")
+                f"Данные сохранены в БД: {len(categories)} категорий, {len(products)} продуктов, {len(parameters)} параметров, {len(images)} изображений")
 
             return {
                 "categories_saved": len(categories),
@@ -110,10 +112,12 @@ class ApiDataLoaderService:
 
     def _clear_existing_data(self) -> dict[str, int]:
         """Очистить существующие данные"""
+        parametrs_deleted = self.parameter_repo.clear_all()
         products_deleted = self.product_repo.clear_all()
         categories_deleted = self.category_repo.clear_all()
 
         return {
+            "parametres_deleted": parametrs_deleted,
             "products_deleted": products_deleted,
             "categories_deleted": categories_deleted
         }
