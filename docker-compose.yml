@@ -88,6 +88,4 @@ networks:
   app_network:
     name: app_network
 
-volumes:
-  postgres-data:
-  pgadmin-data:
+
